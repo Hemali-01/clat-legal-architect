@@ -77,6 +77,14 @@ else:
                 genai.configure(api_key=api_key.strip())
                 model = genai.GenerativeModel("models/gemini-3.6-flash")
 
+               if st.button("Generate Deep Dive & Logic Drill"):
+        if not active_topic.strip():
+            st.error("Please enter or select a topic first!")
+        else:
+            try:
+                genai.configure(api_key=api_key.strip())
+                model = genai.GenerativeModel("models/gemini-3.6-flash")
+
                 prompt = f"""
                 You are an elite Constitutional Law and Jurisprudence professor at NLSIU Bengaluru teaching a high-ranking CLAT PG aspirant.
                 Provide an exhaustive, high-yield deconstruction of: '{active_topic}'.
@@ -92,6 +100,21 @@ else:
                 - Institutional mechanics, power asymmetry, executive friction, and systemic impact.
                 
                 ### 3. Pips-Style Logic & Elimination Drill
+                - A complex, multi-layered problem matrix scenario.
+                - 3 distinct deductive options (Sound Law, Flawed Premise, Subtle Procedural Error).
+                - Demarcated solution with detailed rationale explaining why the distractors collapse.
+                """
+
+                def stream_response():
+                    response = model.generate_content(prompt, stream=True)
+                    for chunk in response:
+                        if chunk.text:
+                            yield chunk.text
+
+                st.write_stream(stream_response)
+
+            except Exception as e:
+                st.error(f"Execution notice: {e}")
                 - A complex, multi-layered problem matrix scenario.
                 - 3 distinct deductive options (Sound Law, Flawed Premise, Subtle Procedural Error).
                 - Demarcated solution with detailed rationale explaining why the distractors collapse.
