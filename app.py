@@ -1,5 +1,5 @@
 import streamlit as st
-from google import genai
+import google.generativeai as genai
 
 st.set_page_config(
     page_title="JurisPulse | Pocket NLU",
@@ -69,7 +69,9 @@ else:
     if st.button("Generate Pocket NLU Deep Dive & Logic Drill"):
         clean_key = api_key.strip()
         try:
-            client = genai.Client(api_key=clean_key)
+            genai.configure(api_key=clean_key)
+            model = genai.GenerativeModel("gemini-1.5-flash")
+            
             with st.spinner("Deconstructing legal doctrine and sociological context..."):
                 prompt = f"""
                 You are a senior Constitutional Law and Jurisprudence professor at a premier National Law School (NLU) teaching an elite aspirant for CLAT PG.
@@ -91,10 +93,7 @@ else:
                 - Provide the answer clearly demarcated below with an explanation of why the distractors fail.
                 """
                 
-                response = client.models.generate_content(
-                    model='models/gemini-1.5-flash',
-                    contents=prompt
-                )
+                response = model.generate_content(prompt)
                 st.session_state["study_material"] = response.text
         except Exception as e:
             st.error(f"Error connecting to the API: {e}")
