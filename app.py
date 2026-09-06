@@ -22,27 +22,26 @@ st.markdown("""
         background-color: #FBFBFA;
         color: #1A1A1A;
     }
-    .card {
-        background-color: #FFFFFF;
-        border-left: 6px solid #2B6CB0;
-        border-radius: 8px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
     </style>
 """, unsafe_allow_html=True)
 
 st.sidebar.title("⚖️ Pocket NLU Engine")
 
-# Secure API input in sidebar
-api_key = st.sidebar.text_input("Enter Gemini API Key", type="password", help="Get a free key from aistudio.google.com")
+# Auto-fetch permanent key from secrets if available
+saved_key = st.secrets.get("GEMINI_API_KEY", "")
 
-st.sidebar.subheader("Core CLAT PG Syllabus")
+if not saved_key:
+    api_key = st.sidebar.text_input("Enter Gemini API Key", type="password", help="Add to Streamlit Secrets to never type this again.")
+else:
+    api_key = saved_key
+    st.sidebar.success("🔑 API Key permanently loaded")
+
+st.sidebar.subheader("CLAT PG Modules")
 preset_topic = st.sidebar.selectbox(
-    "Choose a Landmark Pillar:",
+    "Select or Customize Pillar:",
     [
         "Custom Topic (Enter below)",
+        "Unlawful Activities (Prevention) Act: Section 43D(5) vs. Article 21 (Watali to Najeeb)",
         "Article 21 & The Evolution of Proportionality (Puttaswamy to modern benches)",
         "Basic Structure Doctrine & Limits of Article 368 (Kesavananda, Minerva Mills)",
         "Preventive Detention & Procedural Safeguards (Article 22 vs. National Security)",
@@ -56,48 +55,57 @@ preset_topic = st.sidebar.selectbox(
 
 custom_topic = ""
 if preset_topic == "Custom Topic (Enter below)":
-    custom_topic = st.text_input("Enter any legal concept, case, or section to deconstruct:", "Doctrine of Severability and Eclipse")
+    custom_topic = st.text_input(
+        "Enter any statute, section, doctrine, or case law:",
+        placeholder="e.g., Section 43D(5) UAPA and Watali judgment"
+    )
 
 active_topic = custom_topic if preset_topic == "Custom Topic (Enter below)" else preset_topic
 
 st.title("📚 Pocket NLU: Master Class & Diagnostic")
-st.write(f"**Current Subject Focus:** {active_topic}")
+if active_topic:
+    st.markdown(f"**Current Subject Focus:** `{active_topic}`")
 
 if not api_key:
-    st.warning("👈 Paste your free API key into the sidebar to activate the infinite study engine.")
+    st.warning("👈 Add your API key in Streamlit App Settings > Secrets so you never have to paste it again.")
 else:
-    if st.button("Generate Pocket NLU Deep Dive & Logic Drill"):
-        clean_key = api_key.strip()
-        try:
-            genai.configure(api_key=clean_key)
-            # Use the exact active model designated for new API keys
-            model = genai.GenerativeModel("models/gemini-3.6-flash")
-            
-            with st.spinner("Deconstructing legal doctrine and sociological context..."):
-                prompt = f"""
-                You are a senior Constitutional Law and Jurisprudence professor at a premier National Law School (NLU) teaching an elite aspirant for CLAT PG.
-                Break down the following legal subject: '{active_topic}'.
-                
-                Format the response strictly into these 3 structured neurodivergent-friendly sections:
-                
-                ### 1. The High-Order Doctrinal Architecture
-                - Break down the core ratio decidendi, statutory hooks, and the historical legal tension.
-                - Keep paragraphs short, punchy, and scannable with inline bolding. Avoid dense walls of text.
-                
-                ### 2. The Sociological & Systemic Reality (Law in Society)
-                - How does this formal legal doctrine operate on the ground?
-                - Highlight systemic disparities (caste, class, gender, state power) and institutional friction.
-                
-                ### 3. The Pips-Style Eliminative Logic Drill
-                - Present a complex fact-matrix scenario testing this doctrine.
-                - Present 3 distinct choices: one legally sound deduction, one based on a common flawed premise, and one subtle procedural error.
-                - Provide the answer clearly demarcated below with an explanation of why the distractors fail.
-                """
-                
-                response = model.generate_content(prompt)
-                st.session_state["study_material"] = response.text
-        except Exception as e:
-            st.error(f"Connection error: {e}")
+    if st.button("Generate Deep Dive & Logic Drill", type="primary"):
+        if not active_topic.strip():
+            st.error("Please enter or select a topic first!")
+        else:
+            try:
+                genai.configure(api_key=api_key.strip())
+                model = genai.GenerativeModel("models/gemini-3.6-flash")
 
-    if "study_material" in st.session_state:
-        st.markdown(st.session_state["study_material"])
+                prompt = f"""
+                You are an elite Constitutional Law and Jurisprudence professor at NLSIU Bengaluru teaching a high-ranking CLAT PG aspirant.
+                Provide an exhaustive, high-yield deconstruction of: '{active_topic}'.
+                
+                Strictly format into these 3 scannable sections:
+                
+                ### 1. High-Order Doctrinal Architecture
+                - The statutory and constitutional matrix.
+                - Ratio decidendi, shifting judicial standards, and core precedents.
+                - Use punchy bullet points and bold keywords. No walls of text.
+                
+                ### 2. Sociological & Ground-Level Reality
+                - Institutional mechanics, power asymmetry, executive friction, and systemic impact.
+                
+                ### 3. Pips-Style Logic & Elimination Drill
+                - A complex, multi-layered problem matrix scenario.
+                - 3 distinct deductive options (Sound Law, Flawed Premise, Subtle Procedural Error).
+                - Demarcated solution with detailed rationale explaining why the distractors collapse.
+                """
+
+                # Stream the response live so it never hangs
+                output_placeholder = st.empty()
+                full_text = ""
+                
+                with st.spinner("Streaming legal deconstruction..."):
+                    response = model.generate_content(prompt, stream=True)
+                    for chunk in response:
+                        full_text += chunk.text
+                        output_placeholder.markdown(full_text)
+
+            except Exception as e:
+                st.error(f"Execution notice: {e}")
