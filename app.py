@@ -66,35 +66,38 @@ st.write(f"**Current Subject Focus:** {active_topic}")
 if not api_key:
     st.warning("👈 Paste your free API key into the sidebar to activate the infinite study engine.")
 else:
-    client = genai.Client(api_key=api_key)
-
     if st.button("Generate Pocket NLU Deep Dive & Logic Drill"):
-        with st.spinner("Deconstructing legal doctrine and sociological context..."):
-            prompt = f"""
-            You are a senior Constitutional Law and Jurisprudence professor at a premier National Law School (NLU) teaching an elite aspirant for CLAT PG.
-            Break down the following legal subject: '{active_topic}'.
-            
-            Format the response strictly into these 3 structured neurodivergent-friendly sections:
-            
-            ### 1. The High-Order Doctrinal Architecture
-            - Break down the core ratio decidendi, statutory hooks, and the historical legal tension.
-            - Keep paragraphs short, punchy, and scannable with inline bolding. Avoid dense walls of text.
-            
-            ### 2. The Sociological & Systemic Reality (Law in Society)
-            - How does this formal legal doctrine operate on the ground?
-            - Highlight systemic disparities (caste, class, gender, state power) and institutional friction.
-            
-            ### 3. The Pips-Style Eliminative Logic Drill
-            - Present a complex fact-matrix scenario testing this doctrine.
-            - Present 3 distinct choices: one legally sound deduction, one based on a common flawed premise, and one subtle procedural error.
-            - Provide the answer clearly demarcated below with an explanation of why the distractors fail.
-            """
-            
-            response = client.models.generate_content(
-                model='gemini-2.5-flash',
-                contents=prompt
-            )
-            st.session_state["study_material"] = response.text
+        clean_key = api_key.strip()
+        try:
+            client = genai.Client(api_key=clean_key)
+            with st.spinner("Deconstructing legal doctrine and sociological context..."):
+                prompt = f"""
+                You are a senior Constitutional Law and Jurisprudence professor at a premier National Law School (NLU) teaching an elite aspirant for CLAT PG.
+                Break down the following legal subject: '{active_topic}'.
+                
+                Format the response strictly into these 3 structured neurodivergent-friendly sections:
+                
+                ### 1. The High-Order Doctrinal Architecture
+                - Break down the core ratio decidendi, statutory hooks, and the historical legal tension.
+                - Keep paragraphs short, punchy, and scannable with inline bolding. Avoid dense walls of text.
+                
+                ### 2. The Sociological & Systemic Reality (Law in Society)
+                - How does this formal legal doctrine operate on the ground?
+                - Highlight systemic disparities (caste, class, gender, state power) and institutional friction.
+                
+                ### 3. The Pips-Style Eliminative Logic Drill
+                - Present a complex fact-matrix scenario testing this doctrine.
+                - Present 3 distinct choices: one legally sound deduction, one based on a common flawed premise, and one subtle procedural error.
+                - Provide the answer clearly demarcated below with an explanation of why the distractors fail.
+                """
+                
+                response = client.models.generate_content(
+                    model='gemini-2.0-flash',
+                    contents=prompt
+                )
+                st.session_state["study_material"] = response.text
+        except Exception as e:
+            st.error(f"Error connecting to the API: {e}")
 
     if "study_material" in st.session_state:
         st.markdown(st.session_state["study_material"])
