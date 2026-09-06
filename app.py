@@ -1,13 +1,13 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="JurisPulse | NLU Pocket Lab",
+    page_title="JurisPulse | Pocket NLU",
     page_icon="⚖️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Dyslexia-friendly styling, generous spacing, low glare
+# Dyslexia-friendly styling, high scannability, soft contrast
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
@@ -21,22 +21,34 @@ st.markdown("""
         background-color: #FBFBFA;
         color: #1A1A1A;
     }
-    .card {
+    .anchor-box {
         background-color: #FFFFFF;
-        border: 1px solid #E2E8F0;
         border-left: 6px solid #2B6CB0;
+        border-radius: 8px;
         padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 22px;
+        margin-bottom: 20px;
         box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
-    .socio-card {
-        background-color: #F7FAFC;
-        border: 1px solid #CBD5E0;
-        border-left: 6px solid #7B341E;
-        padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 22px;
+    .diagnostic-sound {
+        background-color: #F0FFF4;
+        border-left: 6px solid #38A169;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 14px;
+    }
+    .diagnostic-flaw {
+        background-color: #FFF5F5;
+        border-left: 6px solid #E53E3E;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 14px;
+    }
+    .diagnostic-socio {
+        background-color: #FFFAF0;
+        border-left: 6px solid #DD6B20;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 14px;
     }
     .badge {
         display: inline-block;
@@ -46,152 +58,187 @@ st.markdown("""
         font-weight: 600;
         background-color: #EBF8FF;
         color: #2B6CB0;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # Navigation
-st.sidebar.title("⚖️ JurisPulse")
-st.sidebar.caption("High-Order Legal Reasoning Engine")
-section = st.sidebar.radio(
-    "Choose Module:",
+st.sidebar.title("⚖️ JurisPulse Lab")
+st.sidebar.caption("Socratic Neuro-Adaptive Legal Engine")
+
+topic = st.sidebar.selectbox(
+    "Select Master Subject:",
     [
-        "🧩 Constitutional Logic Lab",
-        "🔍 Landmark Ratio Extractor",
-        "🌐 Law & Sociological Reality",
-        "🎯 CLAT PG Passage Drill"
+        "Constitutional Law: Article 21 & Proportionality",
+        "Criminal Law: Section 479 BNSS & Undertrial Detention",
+        "Statutory Interpretation: Strict vs. Purposive Construction"
     ]
 )
 
-st.title(section)
-
 # -------------------------------------------------------------
-# MODULE 1: CONSTITUTIONAL LOGIC LAB (Pips-Style Deduction)
+# TOPIC 1: ARTICLE 21 & PROPORTIONALITY
 # -------------------------------------------------------------
-if section == "🧩 Constitutional Logic Lab":
+if topic == "Constitutional Law: Article 21 & Proportionality":
+    st.title("🎯 Module: Article 21 & The Proportionality Standard")
+    
+    # 1. THE ANCHOR (Teaching with High Context)
     st.markdown("""
-    <div class="card">
-        <span class="badge">LOGIC GRID DRILL</span>
-        <h3>The Basic Structure Deduction</h3>
-        <p><b>Premise:</b> Parliament passes a Constitutional Amendment inserting a clause into Article 368 that states: <i>"No amendment made under this article shall be called into question in any court on any ground."</i></p>
-        <p>You are challenging this on behalf of a civil liberties petitioner. To strike down this clause, your legal reasoning chain requires three sound anchors.</p>
+    <div class="anchor-box">
+        <span class="badge">DECONSTRUCTED CONCEPT</span>
+        <h3>The Shift from 'Procedure Established by Law' to 'Proportionality'</h3>
+        <p><b>The Evolution:</b></p>
+        <ul>
+            <li><b>A.K. Gopalan (1950):</b> Formalistic, compartmentalized reading. Law just needed legislative competence.</li>
+            <li><b>Maneka Gandhi (1978):</b> The Golden Triangle (Arts 14, 19, 21). The procedure must be <i>just, fair, and reasonable</i>.</li>
+            <li><b>Puttaswamy (2017):</b> The 4-prong Proportionality Test replaces judicial intuition with strict empirical scrutiny.</li>
+        </ul>
+        <hr style="border: 0; border-top: 1px solid #E2E8F0; margin: 15px 0;">
+        <p><b>The 4 Non-Negotiable Prongs:</b></p>
+        <ol>
+            <li><b>Legality:</b> State action must be backed by an enacted statutory law (not mere executive fiat).</li>
+            <li><b>Legitimate State Goal:</b> The aim must fall within permissible constitutional limits.</li>
+            <li><b>Suitability (Rational Nexus):</b> The measure must realistically further the stated goal.</li>
+            <li><b>Necessity (Least Restrictive Measure):</b> The state must prove <i>no less intrusive alternative</i> was available.</li>
+        </ol>
     </div>
     """, unsafe_allow_html=True)
 
-    st.subheader("Step 1: Identify the Broken Principle")
-    step1 = st.radio(
-        "Which foundational doctrine is directly destroyed by removing judicial review of amendments?",
+    st.subheader("🧪 Deductive Reasoning Test")
+    st.write("**Scenario:** The State implements biometric face-recognition surveillance across public transport hubs by an internal Police Department Circular to prevent petty theft. A citizen challenges this under Article 21.")
+
+    # Deductive choice
+    selected_flaw = st.radio(
+        "Which prong of the Proportionality Standard collapses first and fatal to the State's defence?",
         [
-            "Separation of Powers & Judicial Review (Kesavananda / Minerva Mills)",
-            "Doctrine of Pith and Substance",
-            "Principle of Colorable Legislation alone"
+            "Legality: An executive circular is not an enacted statutory law passed by the legislature.",
+            "Suitability: Preventing theft has no rational connection to identifying people.",
+            "Legitimate Goal: Preventing crime is not a valid state objective."
         ]
     )
 
-    st.subheader("Step 2: Spot the False Analogy")
-    step2 = st.radio(
-        "Opposing counsel argues: 'Constituent power is sovereign and equivalent to original constituent assembly authority.' How do you dismantle this?",
-        [
-            "By conceding that Article 368 gives limitless constituent power.",
-            "By distinguishing between 'original' constituent power (framing the Constitution) and 'derivative' amending power under Article 368 (limited by the Constitution itself).",
-            "By relying strictly on the preamble without citing case law."
-        ]
+    # Explanation input for deep active recall
+    user_justification = st.text_area(
+        "In your own words: Why can't the State rely on public interest or security to bypass formal statutory enactment?",
+        placeholder="Type your reasoning here (1-2 sentences)..."
     )
 
-    if st.button("Verify Deduction Chain"):
-        if (step1 == "Separation of Powers & Judicial Review (Kesavananda / Minerva Mills)" and 
-            step2 == "By distinguishing between 'original' constituent power (framing the Constitution) and 'derivative' amending power under Article 368 (limited by the Constitution itself)."):
-            st.success("🎯 **Flawless Analytical Linkage!** In *Minerva Mills (1980)*, the Supreme Court struck down Clauses (4) and (5) of Article 368 precisely because a limited amending power is itself a basic feature. A creature of the Constitution cannot expand its own power to become unlimited.")
+    if st.button("Audit My Legal Reasoning"):
+        st.divider()
+        st.subheader("📊 Diagnostic Breakdown & Blind-Spot Audit")
+
+        if selected_flaw.startswith("Legality"):
+            st.markdown("""
+            <div class="diagnostic-sound">
+                <b>🎯 Sound Doctrinal Link:</b> Correct! Under <i>Puttaswamy</i> and <i>Anuradha Bhasin</i>, the threshold barrier is <b>Legality</b>. A fundamental right cannot be restricted by an executive notification, circular, or departmental guideline. Without an enacted statute, the inquiry ends immediately—the court doesn't even need to examine the other 3 prongs.
+            </div>
+            """, unsafe_allow_html=True)
         else:
-            st.error("⚠️ **Logical Contradiction Detected.** Re-evaluate the distinction between original constituent power and derivative amendment power.")
+            st.markdown("""
+            <div class="diagnostic-flaw">
+                <b>⚠️ Flawed Legal Deduction:</b> You jumped ahead to balancing tests while skipping the threshold requirement! Even if preventing crime is a legitimate goal, the State instantly loses at Prong 1 (Legality) if there is no legislative statute authorizing the intrusion.
+            </div>
+            """, unsafe_allow_html=True)
+
+        if user_justification:
+            st.markdown(f"""
+            <div class="diagnostic-socio">
+                <b>🌐 Sociological Reality Anchor:</b> Your response: <i>"{user_justification}"</i>.<br><br>
+                <b>Systemic Reality Check:</b> In practice, executive bodies routinely use internal SOPs and informal circulars to enforce surveillance before laws are enacted. In CLAT PG questions, the examiners specifically test whether you can separate <i>executive convenience</i> from <i>constitutional legality</i>.
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.info("💡 Pro-tip: Next time, write your brief rationale above so the engine can test your articulation.")
 
 # -------------------------------------------------------------
-# MODULE 2: LANDMARK RATIO EXTRACTOR
+# TOPIC 2: SECTION 479 BNSS & UNDERTRIAL DETENTION
 # -------------------------------------------------------------
-elif section == "🔍 Landmark Ratio Extractor":
+elif topic == "Criminal Law: Section 479 BNSS & Undertrial Detention":
+    st.title("🎯 Module: Section 479 BNSS & The Undertrial Crisis")
+
     st.markdown("""
-    <div class="card">
-        <span class="badge">PRECEDENT BREAKDOWN</span>
-        <h3>Deconstructing: <i>K.S. Puttaswamy v. Union of India (2017)</i></h3>
-        <p>9-Judge Constitutional Bench on the Fundamental Right to Privacy under Article 21.</p>
+    <div class="anchor-box">
+        <span class="badge">STATUTORY ARCHITECTURE</span>
+        <h3>Section 479 of the Bharatiya Nagarik Suraksha Sanhita (BNSS)</h3>
+        <p>Replaces and amends former Section 436A CrPC regarding maximum detention periods for undertrials.</p>
+        <p><b>Key Rules:</b></p>
+        <ul>
+            <li><b>General Rule:</b> Release on bail if an undertrial has undergone detention extending up to <b>one-half</b> of the maximum imprisonment specified for that offense.</li>
+            <li><b>First-Time Offender Proviso:</b> Release if the person has undergone <b>one-third</b> of the maximum imprisonment (if never previously convicted of any offense).</li>
+            <li><b>Carve-Outs / Exceptions:</b> Does not apply to offenses punishable with death or life imprisonment.</li>
+        </ul>
     </div>
     """, unsafe_allow_html=True)
 
-    tab1, tab2, tab3 = st.tabs(["📌 Core Ratio", "⚖️ The Proportionality Test", "⚡ Overruled Precedents"])
-    
-    with tab1:
-        st.markdown("**What did the Court actually hold?**")
-        st.write("""
-        - Privacy is not an elitist construct; it is an intrinsic element of life, personal liberty, and human dignity.
-        - Privacy has both negative content (freedom from state intrusion) and positive content (state duty to protect personal autonomy).
-        - It is protected under Article 21 as well as across the overarching architecture of Part III.
-        """)
-    
-    with tab2:
-        st.markdown("**The 4-Prong Proportionality Test (To Justify Any State Infringement):**")
-        st.write("1. **Legality:** Must have an explicit statutory law backing the action.")
-        st.write("2. **Legitimate Goal:** The law must serve a legitimate state aim.")
-        st.write("3. **Suitability:** The measure adopted must be rationally connected to the objective.")
-        st.write("4. **Necessity (Least Restrictive Measure):** No less intrusive means could achieve the same result.")
+    st.subheader("🧪 Deductive Reasoning Test")
+    st.write("**Scenario:** 'A', a first-time offender with no prior criminal record, is charged under a section where the maximum prescribed punishment is 6 years. 'A' has spent 2 years and 1 month in jail awaiting trial because he cannot furnish financial sureties. The Magistrate refuses bail, stating trial will commence soon.")
 
-    with tab3:
-        st.markdown("**Explicitly Overruled Jurisprudence:**")
-        st.warning("""
-        - **M.P. Sharma (1954):** Overruled to the extent it held that privacy was not constitutionally protected.
-        - **Kharak Singh (1962):** Overruled where it denied a right to privacy regarding domiciliary police visits.
-        - **ADM Jabalpur (1976):** Formally buried; the Court reaffirmed that fundamental rights are not gifts of the State that vanish during emergencies.
-        """)
-
-# -------------------------------------------------------------
-# MODULE 3: LAW & SOCIOLOGICAL REALITY
-# -------------------------------------------------------------
-elif section == "🌐 Law & Sociological Reality":
-    st.markdown("""
-    <div class="socio-card">
-        <span class="badge">SOCIO-LEGAL JURISPRUDENCE</span>
-        <h3>The Bail Disparity: Formal Equality vs. Substantive Justice</h3>
-        <p>How statutory criminal procedure clashes with economic and caste realities.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("**Statutory & Doctrinal Architecture**")
-        st.write("- **Principle:** 'Bail is the rule, jail is the exception' (*State of Rajasthan v. Balchand*).")
-        st.write("- **Statutory Anchor:** Section 479 of the Bharatiya Nagarik Suraksha Sanhita (BNSS) governing detention limits for undertrial prisoners.")
-        st.write("- **Presumption:** Presumption of innocence remains intact until final conviction.")
-    
-    with col2:
-        st.markdown("**Sociological Ground Reality**")
-        st.write("- **The Undertrial Trap:** Over 70% of India's prison population comprises undertrial prisoners, overwhelmingly from Dalit, Adivasi, and economically disadvantaged groups.")
-        st.write("- **The Surety Barrier:** Imposing monetary surety bonds treats indigent accused persons as flight risks simply because they lack property or influential sureties.")
-        st.write("- **Systemic Inaction:** Formal rights mean nothing without institutional legal aid delivery at the remand stage.")
-
-# -------------------------------------------------------------
-# MODULE 4: CLAT PG PASSAGE DRILL
-# -------------------------------------------------------------
-elif section == "🎯 CLAT PG Passage Drill":
-    st.markdown("""
-    <div class="card">
-        <span class="badge">CLAT PG COMPREHENSION PASSAGE</span>
-        <p style="font-size: 1.05em; line-height: 1.8;">
-        <i>"The test of proportionality is not a mere formal inquiry into legislative competence; it demands that the State justify the necessity of an encroaching measure with empirical demonstration. When fundamental freedoms under Part III are curtailed, the burden rests squarely on the State to demonstrate that no alternative, less-drastic measure could achieve the proclaimed statutory objective..."</i>
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    ans = st.radio(
-        "Based on the passage and constitutional jurisprudence, on whom does the burden of justification lie once a prima facie violation of a fundamental right is established?",
+    ans_bnss = st.radio(
+        "What is the statutory imperative under Section 479 BNSS?",
         [
-            "On the Petitioner, to prove malicious state intent beyond reasonable doubt.",
-            "On the State, to prove necessity and proportionality using the least restrictive measure.",
-            "Equally on both parties through administrative affidavits."
+            "The Magistrate has complete discretion to withhold bail until trial concludes.",
+            "Release is mandatory because 'A' has served more than one-third (2 years) as a first-time offender, on personal bond without sureties if indigent.",
+            "Release is only permissible after completing one-half (3 years), irrespective of prior record."
         ]
     )
 
-    if st.button("Check Answer"):
-        if ans == "On the State, to prove necessity and proportionality using the least restrictive measure.":
-            st.success("✅ **Correct!** In constitutional scrutiny under proportionality, once a petitioner demonstrates that a fundamental right is curtailed, the evidentiary burden shifts to the State to satisfy the necessity and proportionality test.")
+    if st.button("Audit My Legal Reasoning"):
+        st.divider()
+        st.subheader("📊 Diagnostic Breakdown & Blind-Spot Audit")
+        
+        if ans_bnss.startswith("Release is mandatory"):
+            st.markdown("""
+            <div class="diagnostic-sound">
+                <b>🎯 Sound Statutory Extraction:</b> Exactly right. Section 479(1) Proviso 1 mandates release after one-third detention for first-time offenders. Furthermore, indigent persons unable to provide sureties must be released on a personal recognizance bond.
+            </div>
+            <div class="diagnostic-socio">
+                <b>🌐 Sociological Context:</b> Over 70% of India's prison population are undertrials. The Supreme Court in <i>Re Inhuman Conditions in 1382 Prisons</i> noted that monetary sureties act as an economic barrier to liberty, disproportionately incarcerating impoverished citizens.
+            </div>
+            """, unsafe_allow_html=True)
         else:
-            st.error("❌ Review the burden-shifting mechanics under modern Article 21 and Article 14 review.")
+            st.markdown("""
+            <div class="diagnostic-flaw">
+                <b>⚠️ Statutory Blind Spot:</b> You missed the critical amendment in BNSS! The new code specifically lowered the threshold from one-half to <b>one-third</b> for first-time offenders. Remember this distinction for both procedural practice and CLAT PG MCQs.
+            </div>
+            """, unsafe_allow_html=True)
+
+# -------------------------------------------------------------
+# TOPIC 3: STATUTORY INTERPRETATION
+# -------------------------------------------------------------
+elif topic == "Statutory Interpretation: Strict vs. Purposive Construction":
+    st.title("🎯 Module: Strict Construction vs. Purposive Rule")
+
+    st.markdown("""
+    <div class="anchor-box">
+        <span class="badge">JURISPRUDENTIAL ANCHOR</span>
+        <h3>Balancing Textualism and Social Purpose</h3>
+        <ul>
+            <li><b>Strict Construction (Penal & Taxing Statutes):</b> If two reasonable interpretations exist, the ambiguity must be resolved in favor of the subject/accused, protecting personal liberty and property.</li>
+            <li><b>Purposive Construction (Beneficial & Remedial Statutes):</b> Focuses on the "mischief" the legislature intended to cure (Heydon's Rule), suppressing subtle inventions for continuance of the mischief.</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+
+    ans_stat = st.radio(
+        "In socio-welfare legislation (e.g., maternity benefit, employee compensation, domestic violence protection), which interpretive canon takes precedence?",
+        [
+            "Strict literal construction to prevent judicial overreach.",
+            "Purposive construction to give effect to the remedial objective of the Parliament.",
+            "Golden rule strictly limited to grammatical corrections."
+        ]
+    )
+
+    if st.button("Audit My Legal Reasoning"):
+        st.divider()
+        if ans_stat.startswith("Purposive construction"):
+            st.markdown("""
+            <div class="diagnostic-sound">
+                <b>🎯 Sound Jurisprudential Grasp:</b> Correct. Beneficial legislation demands a liberal, purposive interpretation to fulfill the constitutional directive principles (Part IV) that animated its drafting.
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown("""
+            <div class="diagnostic-flaw">
+                <b>⚠️ Interpretive Blind Spot:</b> Applying strict textualism to beneficial legislation defeats the purpose of remedial statutes. Courts consistently favor interpretations that advance social justice over literal technicalities.
+            </div>
+            """, unsafe_allow_html=True)
