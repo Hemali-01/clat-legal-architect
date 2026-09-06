@@ -70,33 +70,50 @@ else:
         clean_key = api_key.strip()
         try:
             genai.configure(api_key=clean_key)
-            model = genai.GenerativeModel("gemini-1.5-flash")
             
-            with st.spinner("Deconstructing legal doctrine and sociological context..."):
-                prompt = f"""
-                You are a senior Constitutional Law and Jurisprudence professor at a premier National Law School (NLU) teaching an elite aspirant for CLAT PG.
-                Break down the following legal subject: '{active_topic}'.
+            # Find the first available text model automatically
+            available_models = [
+                m.name for m in genai.list_models() 
+                if 'generateContent' in m.supported_generation_methods
+            ]
+            
+            if not available_models:
+                st.error("No models found supporting content generation for this key.")
+            else:
+                # Pick the best available model from the account
+                chosen_model = available_models[0]
+                for m in available_models:
+                    if "flash" in m:
+                        chosen_model = m
+                        break
+
+                model = genai.GenerativeModel(chosen_model)
                 
-                Format the response strictly into these 3 structured neurodivergent-friendly sections:
-                
-                ### 1. The High-Order Doctrinal Architecture
-                - Break down the core ratio decidendi, statutory hooks, and the historical legal tension.
-                - Keep paragraphs short, punchy, and scannable with inline bolding. Avoid dense walls of text.
-                
-                ### 2. The Sociological & Systemic Reality (Law in Society)
-                - How does this formal legal doctrine operate on the ground?
-                - Highlight systemic disparities (caste, class, gender, state power) and institutional friction.
-                
-                ### 3. The Pips-Style Eliminative Logic Drill
-                - Present a complex fact-matrix scenario testing this doctrine.
-                - Present 3 distinct choices: one legally sound deduction, one based on a common flawed premise, and one subtle procedural error.
-                - Provide the answer clearly demarcated below with an explanation of why the distractors fail.
-                """
-                
-                response = model.generate_content(prompt)
-                st.session_state["study_material"] = response.text
+                with st.spinner(f"Deconstructing legal doctrine using {chosen_model}..."):
+                    prompt = f"""
+                    You are a senior Constitutional Law and Jurisprudence professor at a premier National Law School (NLU) teaching an elite aspirant for CLAT PG.
+                    Break down the following legal subject: '{active_topic}'.
+                    
+                    Format the response strictly into these 3 structured neurodivergent-friendly sections:
+                    
+                    ### 1. The High-Order Doctrinal Architecture
+                    - Break down the core ratio decidendi, statutory hooks, and the historical legal tension.
+                    - Keep paragraphs short, punchy, and scannable with inline bolding. Avoid dense walls of text.
+                    
+                    ### 2. The Sociological & Systemic Reality (Law in Society)
+                    - How does this formal legal doctrine operate on the ground?
+                    - Highlight systemic disparities (caste, class, gender, state power) and institutional friction.
+                    
+                    ### 3. The Pips-Style Eliminative Logic Drill
+                    - Present a complex fact-matrix scenario testing this doctrine.
+                    - Present 3 distinct choices: one legally sound deduction, one based on a common flawed premise, and one subtle procedural error.
+                    - Provide the answer clearly demarcated below with an explanation of why the distractors fail.
+                    """
+                    
+                    response = model.generate_content(prompt)
+                    st.session_state["study_material"] = response.text
         except Exception as e:
-            st.error(f"Error connecting to the API: {e}")
+            st.error(f"Diagnostic connection details: {e}")
 
     if "study_material" in st.session_state:
         st.markdown(st.session_state["study_material"])
