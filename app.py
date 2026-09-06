@@ -31,7 +31,7 @@ st.sidebar.title("⚖️ Pocket NLU Engine")
 saved_key = st.secrets.get("GEMINI_API_KEY", "")
 
 if not saved_key:
-    api_key = st.sidebar.text_input("Enter Gemini API Key", type="password", help="Add to Streamlit Secrets to never type this again.")
+    api_key = st.sidebar.text_input("Enter Gemini API Key", type="password", help="Add to Streamlit Secrets to avoid re-entering.")
 else:
     api_key = saved_key
     st.sidebar.success("🔑 API Key permanently loaded")
@@ -67,17 +67,9 @@ if active_topic:
     st.markdown(f"**Current Subject Focus:** `{active_topic}`")
 
 if not api_key:
-    st.warning("👈 Add your API key in Streamlit App Settings > Secrets so you never have to paste it again.")
+    st.warning("👈 Add your API key in Streamlit App Settings > Secrets or enter it in the sidebar.")
 else:
-    if st.button("Generate Deep Dive & Logic Drill", type="primary"):
-        if not active_topic.strip():
-            st.error("Please enter or select a topic first!")
-        else:
-            try:
-                genai.configure(api_key=api_key.strip())
-                model = genai.GenerativeModel("models/gemini-3.6-flash")
-
-               if st.button("Generate Deep Dive & Logic Drill"):
+    if st.button("Generate Deep Dive & Logic Drill"):
         if not active_topic.strip():
             st.error("Please enter or select a topic first!")
         else:
@@ -112,23 +104,6 @@ else:
                             yield chunk.text
 
                 st.write_stream(stream_response)
-
-            except Exception as e:
-                st.error(f"Execution notice: {e}")
-                - A complex, multi-layered problem matrix scenario.
-                - 3 distinct deductive options (Sound Law, Flawed Premise, Subtle Procedural Error).
-                - Demarcated solution with detailed rationale explaining why the distractors collapse.
-                """
-
-                # Stream the response live so it never hangs
-                output_placeholder = st.empty()
-                full_text = ""
-                
-                with st.spinner("Streaming legal deconstruction..."):
-                    response = model.generate_content(prompt, stream=True)
-                    for chunk in response:
-                        full_text += chunk.text
-                        output_placeholder.markdown(full_text)
 
             except Exception as e:
                 st.error(f"Execution notice: {e}")
